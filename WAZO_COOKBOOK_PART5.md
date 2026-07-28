@@ -1,3 +1,5 @@
+---
+
 # PARTIE 5 : Sécurité, Authentification et Intégrations
 
 Cette partie couvre les workflows d'intégration liés à la sécurité, l'authentification avancée et les intégrations tierces avec Wazo. Ces scénarios sont essentiels pour déployer Wazo en environnement de production avec des exigences de sécurité strictes.
@@ -25,7 +27,6 @@ Content-Type: application/json
 ```
 
 **Payload :**
-
 ```json
 {
   "backend": "wazo_user",
@@ -36,7 +37,6 @@ Content-Type: application/json
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
@@ -55,7 +55,6 @@ Content-Type: application/json
 ```
 
 **Payload :**
-
 ```json
 {
   "backend": "wazo_user",
@@ -74,7 +73,6 @@ DELETE /api/auth/0.1/token/{token}
 ```
 
 **Headers :**
-
 ```http
 X-Auth-Token: {current_token}
 ```
@@ -82,7 +80,6 @@ X-Auth-Token: {current_token}
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - Never hardcode credentials in source code. Use environment variables or a secrets manager.
 > - Tokens with `expiration: 3600` (1 hour) are recommended for long-running scripts; shorter durations (300-600s) for higher security.
 > - Always implement token caching to avoid authenticating on every API call.
@@ -113,7 +110,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "host": "ldap://ldap.example.com",
@@ -146,7 +142,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "enabled": true
@@ -161,7 +156,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "status": "ok",
@@ -180,7 +174,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "mappings": [
@@ -206,7 +199,6 @@ Content-Type: application/json
 ```
 
 **Payload :**
-
 ```json
 {
   "backend": "ldap",
@@ -217,7 +209,6 @@ Content-Type: application/json
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "new_token_xyz",
@@ -231,7 +222,6 @@ Content-Type: application/json
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - Ensure the LDAP bind account has read-only access to the LDAP directory.
 > - User synchronization is on-demand (first login), not automatic/scheduled.
 > - Password changes in LDAP are automatically reflected in Wazo on next login.
@@ -262,7 +252,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "entity_id": "https://wazo.example.com",
@@ -289,7 +278,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```xml
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://wazo.example.com">
   <SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -315,7 +303,7 @@ X-Auth-Token: {admin_token}
 Dans Azure AD, ensure these attributes are sent in the SAML token:
 
 | Attribute | Value |
-| ----------- | ------- |
+|-----------|-------|
 | user.email | user.mail |
 | user.firstname | user.givenName |
 | user.lastname | user.surname |
@@ -329,7 +317,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "enabled": true
@@ -343,7 +330,6 @@ GET /api/auth/0.1/backends/saml/login
 ```
 
 **Réponse (302 Redirect) :**
-
 ```http
 Location: https://login.microsoftonline.com/{tenant_id}/saml2?SAMLRequest=...
 ```
@@ -360,7 +346,6 @@ SAMLResponse=...
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "saml_generated_token_abc123",
@@ -374,7 +359,6 @@ SAMLResponse=...
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - Always use HTTPS in production for both Wazo and the IdP.
 > - Keep the SAML certificate from Azure AD/Okta up to date (renew before expiration).
 > - Test with a non-admin user first — admin accounts may have different attribute mappings.
@@ -402,7 +386,6 @@ Content-Type: application/json
 ```
 
 **Payload :**
-
 ```json
 {
   "backend": "wazo_user",
@@ -414,7 +397,6 @@ Content-Type: application/json
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "main_token_abc",
@@ -426,7 +408,6 @@ Content-Type: application/json
 ```
 
 > **🔗 Chaînage** : Récupérez les deux tokens :
->
 > - `token` : Pour les appels API normaux (expiration courte)
 > - `refresh_token` : Pour renouvellement (expiration longue)
 
@@ -445,7 +426,6 @@ Content-Type: application/json
 ```
 
 **Payload :**
-
 ```json
 {
   "backend": "wazo_user",
@@ -455,7 +435,6 @@ Content-Type: application/json
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "new_main_token_def",
@@ -478,7 +457,6 @@ X-Auth-Token: main_token_abc
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - Refresh tokens have a longer lifespan (default: 24 hours) than access tokens (default: 1 hour).
 > - Store refresh tokens securely — they allow long-term access.
 > - If a refresh token is compromised, revoke it immediately with DELETE.
@@ -510,7 +488,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "client_id": "google_client_id.apps.googleusercontent.com",
@@ -528,7 +505,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "enabled": true
@@ -542,7 +518,6 @@ GET /api/auth/0.1/backends/google/login
 ```
 
 **Réponse :**
-
 ```http
 Location: https://accounts.google.com/o/oauth2/v2/auth?client_id=...&redirect_uri=...&response_type=code&scope=email%20profile
 ```
@@ -557,7 +532,6 @@ code=google_authorization_code
 ```
 
 **Réponse :**
-
 ```json
 {
   "token": "google_wazo_token",
@@ -577,7 +551,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "external_id": "google_user_id",
@@ -594,7 +567,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "server_key": "firebase_server_key"
@@ -604,7 +576,6 @@ X-Auth-Token: {admin_token}
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - External auth requires setting up OAuth2 credentials in the provider's developer console.
 > - The `redirect_uri` must exactly match what's configured in Google/Microsoft.
 > - External auth can be linked to existing users or create new ones (autoprovisioning).
@@ -632,7 +603,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "items": [
@@ -659,7 +629,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "name": "agent_readonly",
@@ -676,7 +645,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "uuid": "policy_uuid_abc123",
@@ -698,7 +666,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload :**
-
 ```json
 {
   "policy_uuid": "policy_uuid_abc123"
@@ -715,7 +682,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "acl": [
@@ -732,7 +698,6 @@ X-Auth-Token: {admin_token}
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - ACLs are additive — an user gets the union of all their policy ACLs.
 > - Use `{uuid}` patterns to restrict access to specific resources (e.g., `confd.lines.15.read`).
 > - The `websocketd` ACL is required for real-time events over WebSocket.
@@ -763,7 +728,6 @@ Wazo-Tenant: {tenant_uuid}
 ```
 
 **Payload :**
-
 ```json
 {
   "name": "CRM Call Events",
@@ -782,7 +746,6 @@ Wazo-Tenant: {tenant_uuid}
 ```
 
 **Réponse :**
-
 ```json
 {
   "id": "webhook_uuid_abc123",
@@ -811,7 +774,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Payload (optionnel — événement de test) :**
-
 ```json
 {
   "event": "call_created",
@@ -823,7 +785,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "status": "sent",
@@ -843,7 +804,6 @@ Wazo-Tenant: {tenant_uuid}
 ```
 
 **Réponse :**
-
 ```json
 {
   "items": [
@@ -866,7 +826,6 @@ X-Auth-Token: {admin_token}
 ```
 
 **Réponse :**
-
 ```json
 {
   "items": [
@@ -916,7 +875,6 @@ X-Auth-Token: {admin_token}
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
->
 > - Webhooks are triggered asynchronously — there's no immediate delivery guarantee.
 > - The receiving endpoint must return HTTP 2xx within 30 seconds (configurable timeout).
 > - Failed deliveries are retried up to 3 times with exponential backoff.
@@ -929,265 +887,176 @@ X-Auth-Token: {admin_token}
 
 ### Objectif
 
-Créer une application Asterisk Stasis via l'interface ARI (Asterisk REST Interface) pour intercepter et analyser les appels en temps réel, ou implémenter l'écoute discrète (snoop) pour la supervision d'appels. Tous les exemples sont alignés sur le **Chapitre 9 — ARI** (Bible 9), testé et validé sur Wazo 26.06.
+Créer une application Asterisk Stasis via l'interface ARI (Asterisk REST Interface) pour intercept and analyze calls in real-time, ou implémenter l'écoute discrète (snoop) pour la supervision d'appels.
 
 ### Services impliqués
 
-- **Asterisk ARI** : Interface RESTful pour contrôle d'appels (port **5039**)
-- **wazo-calld** : Abstraction haut niveau pour ARI (alternative à ARI direct)
+- **Asterisk ARI** : Interface RESTful pour contrôle d'appels
+- **wazo-calld** : Abstraction haut niveau pour ARI
 - **wazo-confd** : Configuration des endpoints
-- **wazo-confgend** : Régénère `ari.d/*.conf` (à stopper avant modification manuelle)
 
 ### Le Workflow détaillé
 
-#### Étape 1 : Créer l'utilisateur ARI (NE PAS toucher à `ari.conf`)
+#### Étape 1 : Configurer un endpoint ARI dans Asterisk
 
-> **⚠️ Piège critique (Bible 9, §9.3 + pitfall #22)** : ne **jamais** modifier
-> `/etc/asterisk/ari.conf` directement. Ce fichier est un `#include ari.d/*.conf`
-> géré par Wazo. Tout `[general]` ajouté dans un fichier custom dupliquera celui
-> déjà présent dans `01-wazo.conf` et Asterisk refusera de parser la conf :
-> `duplicate object 'general'`. Résultat : `res_ari.so` chargé (Use Count > 0)
-> mais `/ari/` jamais listé dans HTTP.
-
-Créer un fichier dédié dans `ari.d/` (Wazo fournit déjà `01-wazo.conf`) :
+Ajoutez dans `/etc/asterisk/ari.conf` :
 
 ```ini
-; /etc/asterisk/ari.d/02-cookbook.conf
-; PAS de section [general] ici — elle est dans 01-wazo.conf
-; Sinon : duplicate object 'general' (pitfall #22)
+[general]
+enabled = yes
+pretty = yes
+allowed_origins = *
 
-[cookbook_user]
-type = user
-read_only = no
-password = <MOT_DE_PASSE_GENERE>
-password_format = plain
+[wazo]
+secret = ari_secret_password
+password = ari_secret_password
+read = all
+write = all
 ```
 
-```bash
-chown asterisk:www-data /etc/asterisk/ari.d/02-cookbook.conf
-chmod 0660 /etc/asterisk/ari.d/02-cookbook.conf
+> **🔗 Chaînage** : Ces credentials (`wazo:ari_secret_password`) seront utilisés pour l'authentification ARI.
 
-# Stopper le timer qui régénère la conf (sinon écrasement)
-systemctl stop wazo-confgend.timer
-asterisk -rx "module reload res_ari"
+#### Étape 2 : Créer une application Stasis via l'API ARI
+
+```http
+POST /ari/applications
+Content-Type: application/json
 ```
 
-Vérifier la prise en compte :
-
-```bash
-asterisk -rx "ari show users"      # doit afficher cookbook_user
-asterisk -rx "ari show status"     # Enabled: Yes
-asterisk -rx "http show status" | grep "/ari"   # /ari/... listé
-```
-
-> **🔗 Chaînage** : ces credentials (`cookbook_user:<password>`) serviront à
-> l'authentification ARI via HTTP Basic Auth (`curl -u`, `aiohttp.BasicAuth` ou
-> header `Authorization: Basic ...`). ARI n'utilise **pas** `X-Auth-Token`.
-
-#### Étape 2 : Déclarer le dialplan Stasis dans `extensions_extra.d/`
-
-> **⚠️ Piège #8** : pas dans `extensions.conf` (régénéré par wazo-confgend).
-
-```ini
-; /etc/asterisk/extensions_extra.d/cookbook-agent.conf
-
-[cookbook-agent]
-exten => _X.,1,NoOp(=== Cookbook Stasis ${EXTEN} from ${CALLERID(num)} ===)
- same => n,Stasis(cookbook-stasis,${EXTEN},${CALLERID(num)})
- same => n,Hangup()
-
-exten => s,1,NoOp(=== Cookbook Stasis entrant ${CALLERID(num)} ===)
- same => n,Answer()
- same => n,Wait(1)
- same => n,Stasis(cookbook-stasis,s,${CALLERID(num)})
- same => n,Hangup()
-
-exten => h,1,NoOp(Cookbook hangup)
- same => n,Return()
-```
-
-```bash
-chown asterisk:www-data /etc/asterisk/extensions_extra.d/cookbook-agent.conf
-chmod 0660 /etc/asterisk/extensions_extra.d/cookbook-agent.conf
-asterisk -rx "dialplan reload"
+**Payload :**
+```json
+{
+  "application_name": "call-recorder",
+  "event_sink": "ws://localhost:8088/ari/events"
+}
 ```
 
 #### Étape 3 : Enregistrer un channel dans l'application Stasis
 
-> **⚠️ Piège #3 (Bible 9)** : l'app Stasis doit être créée **via ARI** (POST
-> `/ari/applications`) **après** que le dialplan la référence via
-> `Stasis(<name>, ...)`. Sinon : `app_stasis.c:129 Stasis(<name>, ...) failed`.
-
-```bash
-# 1. Vérifier que l'app apparaît comme "non registered"
-curl -u cookbook_user:<MDP> http://<host>:5039/ari/applications
-# → [{"name":"callcontrol",...},{"name":"adhoc_conference",...}]
-#    cookbook-stasis n'est PAS dans la liste tant qu'aucun canal n'est entré
-
-# 2. Créer un canal de test (canal Local/ sans média pour smoke test)
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/channels \
-  -H "Content-Type: application/json" \
-  -d '{
-    "endpoint": "Local/1001@cookbook-agent",
-    "app": "cookbook-stasis",
-    "callerId": "TestCall"
-  }'
-# → {"id":"...","name":"Local/1001@cookbook-agent-00000000;1","state":"Down",...}
+```http
+POST /ari/channels
+Content-Type: application/json
 ```
 
-Champs **réellement acceptés** par Asterisk 22 :
-
-| Champ | Type | Notes |
-|---|---|---|
-| `endpoint` | string | `Local/...@context` ou `PJSIP/...` (PAS `SIP/...`) |
-| `app` | string | Nom de l'app Stasis |
-| `callerId` | string | Défini automatiquement quand un canal PJSIP sonne |
-| `variables` | object | Variables de canal initiales (`CHANNEL(...)` autorisé) |
-| `timeout` | int | Secondes avant raccroché auto |
-
-#### Étape 4 : Écoute discrète (Snoop) avec ARI
-
-> **⚠️ Correction** : il n'existe **pas** de préfixe `PJSIP/snoop:`. L'écoute
-> discrète en ARI passe par l'application `Spy` (chan_spy.so) ou par un
-> bridge dédié. En ARI pur, l'idiome recommandé est de créer un second canal
-> branché sur le même contexte Stasis et de le joindre à un bridge mixing avec
-> le canal cible.
-
-```bash
-# 1. Créer un canal cible
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/channels \
-  -H "Content-Type: application/json" \
-  -d '{
-    "endpoint": "Local/1002@cookbook-agent",
-    "app": "cookbook-stasis",
-    "variables": {"SPY_TARGET": "true"}
-  }'
-
-# 2. Créer un bridge "mixing" (whisper both directions)
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/bridges \
-  -H "Content-Type: application/json" \
-  -d '{"type":"mixing,dtmf_events"}'
-
-# 3. Ajouter les deux canaux au bridge
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/bridges/<bridge-id>/addChannel \
-  -H "Content-Type: application/json" \
-  -d '{"channel":"<channel-id-target>"}'
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/bridges/<bridge-id>/addChannel \
-  -H "Content-Type: application/json" \
-  -d '{"channel":"<channel-id-supervisor>"}'
+**Payload :**
+```json
+{
+  "endpoint": "PJSIP/1001",
+  "app": "call-recorder",
+  "variables": {
+    "RECORDING": "true"
+  }
+}
 ```
 
-> **🔗 Chaînage** : les bridges mixing sont l'idiome ARI natif pour la
-> supervision. L'app `Spy` côté dialplan reste valide pour l'écoute audio
-> unidirectionnelle (Voir Bible 9 §9.4.3 et `asterisk -rx "app show Spy"`).
-
-#### Étape 5 : Contrôler un canal (Mute, Raccrocher)
-
-```bash
-# Raccrocher (DELETE — pas POST)
-curl -u cookbook_user:<MDP> -X DELETE http://<host>:5039/ari/channels/<channel-id>
-
-# Mute (ARIA ne fournit PAS de hold ; pour mettre en attente, basculer sur
-# wazo-calld POST /api/calld/1.0/users/{uuid}/calls/{call_id}/hold/start)
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/channels/<channel-id>/mute \
-  -H "Content-Type: application/json" \
-  -d '{"direction":"both"}'
-
-# Jouer un son
-curl -u cookbook_user:<MDP> -X POST http://<host>:5039/ari/channels/<channel-id>/play \
-  -H "Content-Type: application/json" \
-  -d '{"media":"sound:custom/bienvenue"}'
+**Réponse :**
+```json
+{
+  "id": "channel_uuid_abc123",
+  "name": "PJSIP/1001-00000001",
+  "state": "Ring",
+  "dialplan": {
+    "context": "default",
+    "exten": "1001",
+    "priority": 1
+  },
+  "variables": {
+    "RECORDING": "true"
+  }
+}
 ```
 
-> **⚠️ Correction** : `/ari/channels/{id}/hold` n'existe pas en ARI natif.
-> L'hold passe par `Mute` (silence ponctuel) ou par `wazo-calld`. Le cookbook
-> historique mentionnait `POST /hold` et `DELETE /hold` qui retournent 404.
+> **🔗 Chaînage** : Récupérez le `id` du channel — il permet de contrôler le canal (answer, hold, record, etc.).
 
-#### Étape 6 : Recevoir les événements Stasis (WebSocket)
+#### Étape 4 : Implémenter l'écoute discrète (Snoop) avec ARI
 
-```python
-import asyncio
-import aiohttp
-import json
-
-AR_URL = "http://<host>:5039"
-USER = "cookbook_user"
-PASS = "<MOT_DE_PASSE>"
-APP = "cookbook-stasis"
-
-async def listen():
-    # aiohttp < 4.0 : BasicAuth OK ; >= 4.0 : encode_basic_auth + headers
-    headers = {"Authorization": aiohttp.encode_basic_auth(USER, PASS)}
-    async with aiohttp.ClientSession(headers=headers) as session:
-        ws_url = f"{AR_URL}/ari/events?app={APP}&subscribeAll=events"
-        async with session.ws_connect(ws_url) as ws:
-            async for msg in ws:
-                if msg.type != aiohttp.WSMsgType.TEXT:
-                    continue
-                evt = json.loads(msg.data)
-                if evt.get("type") == "StasisStart":
-                    print("StasisStart", evt["channel"]["id"])
-                elif evt.get("type") == "ChannelDestroyed":
-                    print("Hangup", evt["channel"]["id"], evt["channel"].get("cause_txt"))
-
-asyncio.run(listen())
+```http
+POST /ari/channels
+Content-Type: application/json
 ```
 
-> **⚠️ Correction** : le port est **5039** (pas 8089) et la query string est
-> `?app=<name>&subscribeAll=events` (pas `api_key=`). Le token Basic Auth est
-> passé dans le header `Authorization`, pas dans l'URL.
+**Payload :**
+```json
+{
+  "endpoint": "PJSIP/snoop:1002",
+  "app": "supervisor-monitor",
+  "variables": {
+    "SPY_CHANNEL": "channel_uuid_abc123"
+  }
+}
+```
 
-**Exemple d'événement StasisStart (tel qu'envoyé par Asterisk 22) :**
+> **🔗 Chaînage** : Le préfixe `PJSIP/snoop:` crée un canal d'espionnage. Le `SPY_CHANNEL` indique quel canal écouter.
 
+#### Étape 5 : Contrôler la lecture/mise en attente
+
+```http
+# Mettre en hold
+POST /ari/channels/{channel_uuid}/hold
+X-Auth-Token: {ari_token}
+
+# Reprendre
+DELETE /ari/channels/{channel_uuid}/hold
+X-Auth-Token: {ari_token}
+
+# Raccrocher
+DELETE /ari/channels/{channel_uuid}
+X-Auth-Token: {ari_token}
+```
+
+#### Étape 6 : Recevoir les événements Stasis
+
+Établissez une WebSocket vers ARI :
+
+```http
+wss://wazo.example.com:8089/ari/events?app=call-recorder&api_key=wazo:ari_secret_password
+```
+
+**Exemple d'événement StasisStart :**
 ```json
 {
   "type": "StasisStart",
-  "timestamp": "2024-01-15T14:30:00.000+0000",
+  "timestamp": "2024-01-15T14:30:00.000Z",
   "channel": {
-    "id": "1783953092.9",
-    "name": "Local/1001@cookbook-agent-00000000;1",
-    "state": "Ring",
-    "caller": {"name": "", "number": ""},
-    "connected": {"name": "", "number": ""},
-    "dialplan": {"context": "cookbook-agent", "exten": "1001", "priority": 2}
+    "id": "channel_uuid_abc123",
+    "name": "PJSIP/1001-00000001",
+    "state": "Up",
+    "caller": {
+      "name": "John Doe",
+      "number": "1001"
+    },
+    "connected": {
+      "name": "Jane Doe",
+      "number": "1002"
+    }
   },
-  "args": ["1001", ""],
-  "application": "cookbook-stasis"
+  "args": []
 }
 ```
 
 **Exemple d'événement ChannelDestroyed :**
-
 ```json
 {
   "type": "ChannelDestroyed",
-  "timestamp": "2024-01-15T14:35:00.000+0000",
+  "timestamp": "2024-01-15T14:35:00.000Z",
   "channel": {
-    "id": "1783953092.9",
-    "name": "Local/1001@cookbook-agent-00000000;1",
-    "state": "Up",
+    "id": "channel_uuid_abc123",
+    "name": "PJSIP/1001-00000001",
     "cause": 16,
     "cause_txt": "Normal Clearing"
   },
-  "application": "cookbook-stasis"
+  "duration": 300.5
 }
 ```
 
 ### Point d'attention / Warning
 
-> **⚠️ Important** (rapportés à la Bible 9 §9.6) :
->
-> - ARI utilise **HTTP Basic Auth** sur le port **5039**, jamais `X-Auth-Token`.
-> - Ne **jamais** créer de section `[general]` dans `ari.d/*.conf` (pitfall #22).
-> - Créer l'app Stasis **après** avoir chargé le dialplan qui la référence.
-> - `/ari/channels/{id}/hold` n'existe pas : utiliser `Mute` ou `wazo-calld`.
-> - Le Snoop ARI passe par un **bridge mixing**, pas par un endpoint magique.
-> - `aiohttp.BasicAuth` est deprecated ≥ 4.0 : utiliser
->   `aiohttp.encode_basic_auth` + header `Authorization`.
-> - Pour les opérations courantes (hold, transfer, hangup) préférer
->   `wazo-calld` qui encapsule ARI et gère les ACL.
-> - Voir `WAZO_API_BIBLE_CH9_ARI.md` (Bible 9) pour la procédure complète
->   incluant les 22 pièges vérifiés en production sur `wazohermesx`.
+> **⚠️ Important** :
+> - ARI requires enabling the Asterisk REST Interface in `asterisk.conf` and configuring `ari.conf`.
+> - The `wazo-calld` service provides a higher-level abstraction over ARI for common operations.
+> - Snoop channels consume additional Asterisk resources — use sparingly in production.
+> - Stasis applications must handle all channel lifecycle events to avoid orphaned channels.
+> - Ensure proper authentication (API key) for ARI endpoints in production.
 
 ---
 
@@ -1196,10 +1065,10 @@ asyncio.run(listen())
 > **IMPORTANT** : Toutes les API passent par nginx sur le port 443. Les ports ci-dessous sont les ports directs des microservices (pour debugging uniquement).
 
 | Service | Port Direct | Nginx Route | API Base | Purpose |
-| --------- | ------------- | ------------- | ---------- | --------- |
+|---------|-------------|-------------|----------|---------|
 | **wazo-auth** | 9497 | /api/auth/0.1/* | `/api/auth/0.1` | Authentication, tokens, LDAP, SAML |
 | **wazo-webhookd** | 9300 | /api/webhookd/1.0/* | `/api/webhookd/1.0` | Webhook subscriptions |
-| **Asterisk ARI** | **5039** | `/ari/*` (nginx port 443) ou 5039 direct | `/ari` | Call control, Stasis apps |
+| **Asterisk ARI** | 8088 | N/A | `/ari` | Call control, Stasis apps |
 | **wazo-websocketd** | 9502 | /api/websocketd/* | WebSocket | Real-time events |
 
 ---
