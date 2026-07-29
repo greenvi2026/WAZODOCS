@@ -231,7 +231,7 @@ Wazo-Tenant: {tenant_uuid}
 
 ### Objectif
 
-Créer des règles de routage basées sur les skills des agents pour направлять intelligemment les appels vers les agents appropriés.
+Créer des règles de routage basées sur les skills des agents pour distribuer intelligemment les appels vers les agents appropriés..
 
 ### Services impliqués
 
@@ -323,14 +323,22 @@ Wazo-Tenant: {tenant_uuid}
 }
 ```
 
-> **🔗 Chaînage** : Lesskill_rule_variables peuvent être ajoutées pour passer des variables
+> **🔗 Chaînage** : Les `skill_rule_variables` peuvent être ajoutées pour transmettre des variables à la règle.
 
 ### Point d'attention / Warning
 
 > **⚠️ Important** :
 > - La syntaxe des règles utilise les opérateurs : `>`, `<`, `=`, `&` (AND), `|` (OR)
-> - Les noms de skills sont en MAJUSCULES dans les règles
-> - Example : `FR > 0 & TECH > 50`
+> - Les noms de skills sont utilisés dans les règles (ex. `FR`, `TECH`)
+> - Exemple : `FR > 0 & TECH > 50`
+> - La variable `WT` (Waiting Time) correspond au temps d'attente de l'appel dans la file (en secondes)
+> - Les règles sont évaluées dans l'ordre : la première règle valide est utilisée
+> - Exemple de priorisation :
+>   ```
+>   WT < 20 & FR > 99
+>   FR > 49
+>   ```
+> - Les skill rules sélectionnent les agents éligibles ; la distribution reste assurée par la stratégie de la file (`ringall`, `rrmemory`, `leastrecent`, `fewestcalls`, ...)."""
 
 ---
 
